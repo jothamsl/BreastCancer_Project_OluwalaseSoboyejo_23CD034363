@@ -1,0 +1,54 @@
+================================================================================
+BREAST CANCER PREDICTION SYSTEM - SUBMISSION INFORMATION
+================================================================================
+
+Name: Oluwalase Soboyejo
+Matric Number: 23CD034363
+
+--------------------------------------------------------------------------------
+PROJECT DETAILS
+--------------------------------------------------------------------------------
+
+Machine Learning Algorithm Used: K-Nearest Neighbors (KNN)
+
+Model Persistence Method: Joblib
+
+Selected Features (5):
+  1. radius_mean
+  2. texture_mean
+  3. perimeter_mean
+  4. area_mean
+  5. concavity_mean
+
+--------------------------------------------------------------------------------
+DEPLOYMENT LINKS
+--------------------------------------------------------------------------------
+
+Live URL of Hosted Application: [TO BE UPDATED AFTER DEPLOYMENT]
+Example: https://breast-cancer-prediction-oluwalase.onrender.com
+
+GitHub Repository Link: [TO BE UPDATED]
+Example: https://github.com/yourusername/BreastCancer_Project_OluwalaseSoboyejo_23CD034363
+
+--------------------------------------------------------------------------------
+NOTES
+--------------------------------------------------------------------------------
+
+- This system uses the Breast Cancer Wisconsin (Diagnostic) dataset
+- The model was trained using K-Nearest Neighbors algorithm with optimal K value
+- Feature scaling (StandardScaler) is applied to all input features
+- The web application is built using Flask framework
+- Deployment platform: Render.com (or alternative: PythonAnywhere, Streamlit Cloud)
+
+--------------------------------------------------------------------------------
+DISCLAIMER
+--------------------------------------------------------------------------------
+
+This system is strictly for EDUCATIONAL PURPOSES ONLY and must NOT be presented
+as a medical diagnostic tool. Always consult with qualified healthcare
+professionals for medical diagnosis.
+
+================================================================================
+CSC334 - Python II | Project 5 - Breast Cancer Prediction System
+Submission Deadline: Friday, January 22, 2026, on or before 11:59 PM
+================================================================================

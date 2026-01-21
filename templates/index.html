@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Cancer Prediction System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-group small {
+            display: block;
+            color: #888;
+            margin-top: 5px;
+            font-size: 0.85rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            margin-top: 10px;
+        }
+
+        .result-card {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .result-benign {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-malignant {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .result-title.benign {
+            color: #00b894;
+        }
+
+        .result-title.malignant {
+            color: #e74c3c;
+        }
+
+        .result-description {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .confidence-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .confidence-fill.benign {
+            background: linear-gradient(90deg, #00b894, #00cec9);
+        }
+
+        .confidence-fill.malignant {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+
+        .input-summary {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .input-summary h4 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .input-summary table {
+            width: 100%;
+        }
+
+        .input-summary td {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .input-summary td:first-child {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .input-summary td:last-child {
+            text-align: right;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .error-message {
+            background: #ffe6e6;
+            border: 1px solid #ffcccc;
+            color: #cc0000;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .disclaimer {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .disclaimer strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .student-info {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            opacity: 0.9;
+        }
+
+        .student-info p {
+            margin: 5px 0;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎗️ Breast Cancer Prediction System</h1>
+            <p>Machine Learning-based Tumor Classification</p>
+        </header>
+
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if result and result.success %}
+        <!-- Result Display -->
+        <div class="card result-card">
+            <div class="result-icon {% if result.result_class == 'benign' %}result-benign{% else %}result-malignant{% endif %}">
+                {% if result.result_class == 'benign' %}
+                ✓
+                {% else %}
+                ⚠
+                {% endif %}
+            </div>
+            <h2 class="result-title {{ result.result_class }}">
+                {{ result.prediction }}
+            </h2>
+            <p class="result-description">{{ result.description }}</p>
+
+            {% if result.confidence %}
+            <div>
+                <p><strong>Confidence: {{ result.confidence }}%</strong></p>
+                <div class="confidence-bar">
+                    <div class="confidence-fill {{ result.result_class }}" style="width: {{ result.confidence }}%"></div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="input-summary">
+                <h4>Input Features Used:</h4>
+                <table>
+                    {% for feature, value in result.input_features.items() %}
+                    <tr>
+                        <td>{{ feature }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <a href="/" class="btn" style="text-decoration: none; display: inline-block; margin-top: 20px;">
+                Make Another Prediction
+            </a>
+        </div>
+        {% else %}
+        <!-- Input Form -->
+        <div class="card">
+            <h2 class="card-title">Enter Tumor Features</h2>
+
+            <form id="predictionForm" action="/predict" method="POST">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="radius_mean">Radius Mean</label>
+                        <input type="number" id="radius_mean" name="radius_mean" step="any" required
+                               placeholder="e.g., 14.5" min="0">
+                        <small>Mean of distances from center to points on the perimeter</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="texture_mean">Texture Mean</label>
+                        <input type="number" id="texture_mean" name="texture_mean" step="any" required
+                               placeholder="e.g., 19.0" min="0">
+                        <small>Standard deviation of gray-scale values</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="perimeter_mean">Perimeter Mean</label>
+                        <input type="number" id="perimeter_mean" name="perimeter_mean" step="any" required
+                               placeholder="e.g., 92.0" min="0">
+                        <small>Mean size of the core tumor</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="area_mean">Area Mean</label>
+                        <input type="number" id="area_mean" name="area_mean" step="any" required
+                               placeholder="e.g., 655.0" min="0">
+                        <small>Mean area of the tumor</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="concavity_mean">Concavity Mean</label>
+                    <input type="number" id="concavity_mean" name="concavity_mean" step="any" required
+                           placeholder="e.g., 0.09" min="0">
+                    <small>Severity of concave portions of the contour</small>
+                </div>
+
+                <button type="submit" class="btn">
+                    🔍 Predict Diagnosis
+                </button>
+
+                <button type="reset" class="btn btn-reset">
+                    ↺ Reset Form
+                </button>
+            </form>
+
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Analyzing tumor features...</p>
+            </div>
+        </div>
+
+        <!-- Sample Values Card -->
+        <div class="card">
+            <h2 class="card-title">📊 Sample Values for Testing</h2>
+            <div class="form-row">
+                <div>
+                    <h4 style="color: #e74c3c; margin-bottom: 10px;">Typical Malignant Values:</h4>
+                    <ul style="list-style: none; color: #666;">
+                        <li>Radius Mean: 17.99</li>
+                        <li>Texture Mean: 10.38</li>
+                        <li>Perimeter Mean: 122.8</li>
+                        <li>Area Mean: 1001.0</li>
+                        <li>Concavity Mean: 0.30</li>
+                    </ul>
+                    <button onclick="fillMalignant()" class="btn" style="margin-top: 15px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+                        Fill Malignant Sample
+                    </button>
+                </div>
+                <div>
+                    <h4 style="color: #00b894; margin-bottom: 10px;">Typical Benign Values:</h4>
+                    <ul style="list-style: none; color: #666;">
+                        <li>Radius Mean: 12.46</li>
+                        <li>Texture Mean: 24.04</li>
+                        <li>Perimeter Mean: 83.97</li>
+                        <li>Area Mean: 475.9</li>
+                        <li>Concavity Mean: 0.05</li>
+                    </ul>
+                    <button onclick="fillBenign()" class="btn" style="margin-top: 15px; background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);">
+                        Fill Benign Sample
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="disclaimer">
+            <strong>⚠️ Important Disclaimer</strong>
+            This system is strictly for educational purposes and must NOT be used as a medical diagnostic tool.
+            Always consult with qualified healthcare professionals for medical diagnosis.
+        </div>
+
+        <div class="student-info">
+            <p><strong>CSC334 - Python II Project</strong></p>
+            <p>Student: Oluwalase Soboyejo</p>
+            <p>Matric Number: 23CD034363</p>
+            <p>Algorithm: K-Nearest Neighbors (KNN)</p>
+        </div>
+    </div>
+
+    <script>
+        function fillMalignant() {
+            document.getElementById('radius_mean').value = '17.99';
+            document.getElementById('texture_mean').value = '10.38';
+            document.getElementById('perimeter_mean').value = '122.8';
+            document.getElementById('area_mean').value = '1001.0';
+            document.getElementById('concavity_mean').value = '0.30';
+        }
+
+        function fillBenign() {
+            document.getElementById('radius_mean').value = '12.46';
+            document.getElementById('texture_mean').value = '24.04';
+            document.getElementById('perimeter_mean').value = '83.97';
+            document.getElementById('area_mean').value = '475.9';
+            document.getElementById('concavity_mean').value = '0.05';
+        }
+
+        // Form submission handling
+        document.getElementById('predictionForm')?.addEventListener('submit', function(e) {
+            document.getElementById('loadingIndicator').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
