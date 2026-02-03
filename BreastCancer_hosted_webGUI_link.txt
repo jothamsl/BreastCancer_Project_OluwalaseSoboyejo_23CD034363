@@ -24,10 +24,10 @@ Selected Features (5):
 DEPLOYMENT LINKS
 --------------------------------------------------------------------------------
 
-Live URL of Hosted Application: [TO BE UPDATED AFTER DEPLOYMENT]
+Live URL of Hosted Application: https://breastcancer-project-oluwalasesoboyejo.onrender.com
 Example: https://breast-cancer-prediction-oluwalase.onrender.com
 
-GitHub Repository Link: [TO BE UPDATED]
+GitHub Repository Link: https://github.com/jothamsl/BreastCancer_Project_OluwalaseSoboyejo_23CD034363
 Example: https://github.com/yourusername/BreastCancer_Project_OluwalaseSoboyejo_23CD034363
 
 --------------------------------------------------------------------------------
